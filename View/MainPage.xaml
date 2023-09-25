@@ -5,29 +5,28 @@
              xmlns:viewmodel="clr-namespace:MyTaskApp.ViewModel"
              x:DataType="viewmodel:MainViewModel">
 
-    <Grid RowDefinitions=" 100, Auto, *"
-          ColumnDefinitions=".75*,.25*"
-          Padding="10">
+    <Grid RowDefinitions=" 200, Auto, Auto, *"          
+          Padding="10"
+          RowSpacing="10">
 
-        <Image Grid.ColumnSpan="2"
-               Source="my_task_logo.png"
-               BackgroundColor="Transparent">            
+        <Image Grid.ColumnSpan="2"               
+               Source="meal_plan_logo.png"
+               Aspect="AspectFit"               
+               BackgroundColor="Transparent">
         </Image>
 
-        <Entry Placeholder="Enter Task"
-               Text="{Binding MyTaskText}"
-               Grid.Row="1">
-        </Entry>
-
-        <Button Text="Add"
-                Command="{Binding AddCommand}"
-                Grid.Row="1"
-                Grid.Column="1">            
+        <Button Text="New Recipe"
+                Grid.Row="1">
+            <!--Command="{Binding AddNewRecipeCommand}"-->
+        </Button>
+        <Button Text="New Grocery List"
+                Grid.Row="2">
+            <!--Command="{Binding NewGroceryListCommand}"-->
         </Button>
 
         <CollectionView Grid.Row="2" Grid.ColumnSpan="2" 
                         ItemsSource="{Binding Items}"
-                        SelectionMode="None"> 
+                        SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType ="{x:Type x:String}">
                     <SwipeView>
@@ -36,8 +35,8 @@
                                 <SwipeItem Text="Delete"
                                            BackgroundColor="Red"
                                            Command ="{Binding Source = {RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path = DeleteCommand}"
-                                           CommandParameter ="{Binding .}">                                    
-                                </SwipeItem>                                           
+                                           CommandParameter ="{Binding .}">
+                                </SwipeItem>
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Grid Padding="0.5">
@@ -53,13 +52,12 @@
                     </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-                
-            
-            
-            
-            
-        </CollectionView>
-        
-    </Grid>
 
+
+
+
+
+        </CollectionView>
+
+    </Grid>
 </ContentPage>
