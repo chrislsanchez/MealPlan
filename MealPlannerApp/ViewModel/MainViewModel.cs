@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace MealPlannerApp.ViewModel;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : BaseViewModel
 {
 
     [ObservableProperty]
