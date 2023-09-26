@@ -1,4 +1,5 @@
-﻿using MealPlannerApp.ViewModel;
+﻿using MealPlannerApp.View;
+using MealPlannerApp.ViewModel;
 
 namespace MealPlannerApp;
 
@@ -17,6 +18,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
+
+        builder.Services.AddTransient<NewRecipePage>();
+        builder.Services.AddTransient<NewRecipeViewModel>();
 
         return builder.Build();
 	}

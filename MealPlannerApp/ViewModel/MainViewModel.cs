@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MealPlannerApp.View;
 using System.Collections.ObjectModel;
 
 namespace MealPlannerApp.ViewModel;
@@ -54,6 +55,13 @@ public partial class MainViewModel : ObservableObject
         //        {nameof(DetailPage),new object()},
         //    });
 
+    }
+
+
+    [RelayCommand]
+    async Task AddNewRecipe()
+    {
+        await Shell.Current.GoToAsync(nameof(NewRecipePage));
     }
 
 

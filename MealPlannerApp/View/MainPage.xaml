@@ -15,45 +15,20 @@
                BackgroundColor="Transparent">
         </Image>
 
-        <Button Text="New Recipe"
+        <Button Text="New Recipe"                              
                 Grid.Row="1">
-            <!--Command="{Binding AddNewRecipeCommand}"-->
-        </Button>
+            <Button.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding AddNewRecipeCommand}"/>
+            </Button.GestureRecognizers>
+        </Button>        
+
         <Button Text="New Grocery List"
                 Grid.Row="2">
             <!--Command="{Binding NewGroceryListCommand}"-->
-        </Button>
+        </Button>      
+        
+        <!--Create a Tap Gesture recognizer-->
 
-        <CollectionView Grid.Row="2" Grid.ColumnSpan="2" 
-                        ItemsSource="{Binding Items}"
-                        SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType ="{x:Type x:String}">
-                    <SwipeView>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete"
-                                           BackgroundColor="Red"
-                                           Command ="{Binding Source = {RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path = DeleteCommand}"
-                                           CommandParameter ="{Binding .}">
-                                </SwipeItem>
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <Grid Padding="0.5">
-                            <Frame>
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                         Command ="{Binding Source = {RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path = TapCommand}"
-                                         CommandParameter ="{Binding .}"/>
-                                </Frame.GestureRecognizers>
-                                <Label Text="{Binding .}" FontSize="24" TextColor="LightBlue"/>
-                            </Frame>
-                        </Grid>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-        </CollectionView>
 
     </Grid>
 
