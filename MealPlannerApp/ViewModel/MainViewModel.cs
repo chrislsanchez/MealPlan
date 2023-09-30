@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MealPlannerApp.View;
-using System.Collections.ObjectModel;
+﻿using MealPlannerApp.View;
 
 namespace MealPlannerApp.ViewModel;
 

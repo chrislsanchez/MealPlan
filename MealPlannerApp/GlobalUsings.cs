@@ -3,4 +3,4 @@ global using CommunityToolkit.Mvvm.Input;
 global using MealPlannerApp.Model;
 global using MealPlannerApp.ViewModel;
 global using System.Collections.ObjectModel;
-global using System.Diagnostics;
+global using SQLite;
