@@ -14,7 +14,7 @@
         RowSpacing="0">
 
         <Grid Grid.Row="0">
-            <Grid RowDefinitions="Auto,*">
+            <Grid RowDefinitions="Auto,*,Auto">
                 <Grid Grid.Row="0" ColumnDefinitions="2*,*">
                     <Entry Grid.Column="0" Placeholder="Recipe name" />
                     <Entry
@@ -24,25 +24,41 @@
                 </Grid>
 
 
+                <Grid Grid.Row="1" Margin="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Ingredients" />
+                        <Grid ColumnDefinitions="2*,*,*">
+                            <Entry Grid.Column="0" Placeholder="Ingredient" />
+                            <Entry
+                                Grid.Column="1"
+                                Keyboard="Numeric"
+                                Placeholder="Quantity" />
+                            <Entry Grid.Column="2" Placeholder="Unit" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Button Grid.Column="1" Text="Add Ingredient" />
+                        </Grid>
+                        <Label Text="List of Ingredients" />
 
-                <CollectionView
-                    Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    ItemsSource="{Binding Ingredients}"
-                    SelectionMode="None">
+                        <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:Ingredient">
-                            <HorizontalStackLayout Padding="10">
-                                <Label Text="{Binding Text}" />
-                                <Label Text="{Binding Unit}" />
-                            </HorizontalStackLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Ingredient">
+                                    <HorizontalStackLayout Padding="10" Spacing="50">
+                                        <Label Text="{Binding Text}" />
+                                        <Label Text="{Binding Unit}" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Grid>
 
-                </CollectionView>
-
+                <Editor
+                    Grid.Row="2"
+                    HeightRequest="250"
+                    Placeholder="Preparation" />
             </Grid>
         </Grid>
 
