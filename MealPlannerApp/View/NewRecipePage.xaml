@@ -45,7 +45,7 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="model:Ingredient">
                                     <HorizontalStackLayout Padding="10" Spacing="50">
-                                        <Label Text="{Binding Text}" />
+                                        <Label Text="{Binding Name}" />
                                         <Label Text="{Binding Unit}" />
                                     </HorizontalStackLayout>
                                 </DataTemplate>
