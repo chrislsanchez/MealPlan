@@ -30,9 +30,6 @@ public class RecipesDatabaseService
     }
     #endregion
 
-
-
-
     #region Create Update
     public async Task<int> AddOrUpdateRecipeAsync(Recipe recipe)
     {

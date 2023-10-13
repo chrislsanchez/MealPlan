@@ -24,6 +24,7 @@ public class Recipe
     public int ID { get; set; }
     public string Name { get; set; } = string.Empty;
     public string PicturePath { get; set; } = string.Empty;
+
     public string Preparation { get; set; } = string.Empty;
     public int Portions { get; set; }
 }
@@ -43,14 +44,29 @@ public class RecipeIngredient
 public class RecipeDatabaseService
 {
     private readonly SQLiteAsyncConnection _database;
-
     public RecipeDatabaseService(string dbPath)
     {
         _database = new SQLiteAsyncConnection(dbPath);
         _database.CreateTableAsync<Ingredient>().Wait();
-        _database.CreateTableAsync<Recipe>().Wait();
+        InitializeRecipesTable(); // Call a method to set up the Recipe table
         _database.CreateTableAsync<RecipeIngredient>().Wait();
     }
+
+    /// <summary>
+    /// Initialize the Recipes table with custom data types. The TEXT datatype has been assigned to the preparation so it accepts longer strings
+    /// </summary>
+    private void InitializeRecipesTable()
+    {
+        _database.ExecuteAsync(
+            $@"CREATE TABLE IF NOT EXISTS {nameof(Recipe)} (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                {nameof(Recipe.Name)} varchar,
+                {nameof(Recipe.PicturePath)} varchar,
+                {nameof(Recipe.Preparation)} TEXT,
+                {nameof(Recipe.Portions)} INTEGER
+            )").Wait();
+    }
+
 
     #region Read
     public async Task<List<Ingredient>> GetAllIngredientsAsync()
