@@ -201,22 +201,45 @@ public class RecipeDatabaseService
             return await _database.Table<GroceryList>().ToListAsync();
         }
 
-    public async Task<List<Ingredient>> GenerateGroceryListAsync(DateTime startDate, DateTime endDate)
+    public async Task<List<(Ingredient, double)>> GenerateGroceryListAsync(DateTime startDate, DateTime endDate)
     {
         var meals = await _database.Table<Meal>()
             .Where(m => m.Date >= startDate && m.Date <= endDate)
             .ToListAsync();
 
-        var ingredientIds = meals.Select(meal => meal.RecipeID).ToList();
+        var groceryList = new List<(Ingredient, double)>();
 
-        // Get the distinct ingredient IDs from meals
-        var distinctIngredientIds = ingredientIds.Distinct();
+        foreach (var meal in meals)
+        {
+            var recipeIngredients = await _database.Table<RecipeIngredient>()
+                .Where(ri => ri.RecipeID == meal.RecipeID)
+                .ToListAsync();
 
-        // Query the ingredients required for these recipes
-        var ingredients = await _database.Table<Ingredient>().Where(i => distinctIngredientIds.Contains(i.ID)).ToListAsync();
+            var recipe = await _database.Table<Recipe>().Where(r => r.ID == meal.RecipeID).FirstOrDefaultAsync();
 
-        return ingredients;
+            if (recipe != null)
+            {
+                var portionMultiplier = meal.Portions / (double)recipe.Portions;
+
+                foreach (var recipeIngredient in recipeIngredients)
+                {
+                    var ingredient = await _database.Table<Ingredient>().Where(i => i.ID == recipeIngredient.IngredientID).FirstOrDefaultAsync();
+
+                    if (ingredient != null)
+                    {
+                        // Adjust the quantity based on portionMultiplier
+                        double adjustedQuantity = recipeIngredient.Quantity * portionMultiplier;
+                        groceryList.Add((ingredient, adjustedQuantity));
+                    }
+                }
+            }
+        }
+
+        return groceryList;
     }
+
+
+
 
 
     #endregion
@@ -343,9 +366,9 @@ class Program
             var groceryList = await dbService.GenerateGroceryListAsync(startDate, endDate);
 
             Console.WriteLine("Grocery List for the specified date range:");
-            foreach (var ingredient in groceryList)
+            foreach (var (ingredient, quantity) in groceryList)
             {
-                Console.WriteLine($"{ingredient.Name} ({ingredient.Unit}): {ingredient.WhereToFind}");
+                Console.WriteLine($"{ingredient.Name} ({ingredient.Unit}): {quantity} {ingredient.WhereToFind}");
             }
 
 
