@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MealPlanner.View;
+using MealPlanner.ViewModel;
 
 namespace MealPlanner
 {
@@ -16,6 +17,10 @@ namespace MealPlanner
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<MainViewModel>();
+
+            builder.Services.AddTransient<NewRecipePage>();
+            builder.Services.AddTransient<NewRecipeViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();

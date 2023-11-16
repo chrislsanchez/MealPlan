@@ -1,6 +1,13 @@
-﻿namespace MealPlanner.ViewModel
+﻿namespace MealPlanner.ViewModel;
+
+public partial class BaseViewModel : ObservableObject
 {
-    internal class BaseViewModel
-    {
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotBusy))]
+    bool isBusy;
+
+    [ObservableProperty]
+    string title;
+
+    public bool IsNotBusy => !IsBusy;
 }
