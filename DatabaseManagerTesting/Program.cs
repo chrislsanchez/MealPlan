@@ -8,13 +8,30 @@ public enum Unit
     cups
 }
 
+public enum SupermarketSection
+{
+    Other, // Other Area
+    Fruits_and_Vegetables, // Obst und Gemüse Bread
+    Brot_Bakery, // Backwaren
+    Meat_and_Sausages, // Fleisch und Wurst
+    Dairy_Products, // Milchprodukte
+    Frozen_Foods, // Tiefkühlkost
+    Sweets, // Süßwaren
+    Beverages, // Getränke
+    Household_Items, // Haushaltswaren
+    Hygiene_Products, // Hygieneartikel1
+    Canned_Goods, // Konserven
+    Pasta_and_Rice, // Nudeln und Reis
+    Oils_Sauces_and_Spices // Öle, Soßen & Gewürze
+}
+
 public class Ingredient
 {
     [PrimaryKey, AutoIncrement]
     public int ID { get; set; }
     public string Name { get; set; } = string.Empty;
     public Unit Unit { get; set; }
-    public string WhereToFind { get; set; } = string.Empty;
+    public SupermarketSection WhereToFind { get; set; }
 }
 
 public class Recipe
@@ -45,26 +62,27 @@ public class Meal
     public int Portions { get; set; } // Portion specification for this meal
 }
 
-public class GroceryList
+public class GroceryListItem
 {
     [PrimaryKey, AutoIncrement]
     public int ID { get; set; }
-    public DateTime StartDate { get; set; } // Start date of the date range
-    public DateTime EndDate { get; set; } // End date of the date range
+    public int IngredientID { get; set; }
+    public double Quantity { get; set; }
+    public bool IsBought { get; set; }
 }
 
 
 public class RecipeDatabaseService
 {
-    private readonly SQLiteAsyncConnection _database;
+    public readonly SQLiteAsyncConnection Database;
     public RecipeDatabaseService(string dbPath)
     {
-        _database = new SQLiteAsyncConnection(dbPath);
-        _database.CreateTableAsync<Ingredient>().Wait();
+        Database = new SQLiteAsyncConnection(dbPath);
+        Database.CreateTableAsync<Ingredient>().Wait();
         InitializeRecipesTable(); // Call a method to set up the Recipe table
-        _database.CreateTableAsync<RecipeIngredient>().Wait();
-        _database.CreateTableAsync<Meal>().Wait();
-        _database.CreateTableAsync<GroceryList>().Wait();
+        Database.CreateTableAsync<RecipeIngredient>().Wait();
+        Database.CreateTableAsync<Meal>().Wait();
+        Database.CreateTableAsync<GroceryListItem>().Wait();
     }
 
     /// <summary>
@@ -72,7 +90,7 @@ public class RecipeDatabaseService
     /// </summary>
     private void InitializeRecipesTable()
     {
-        _database.ExecuteAsync(
+        Database.ExecuteAsync(
             $@"CREATE TABLE IF NOT EXISTS {nameof(Recipe)} (
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 {nameof(Recipe.Name)} varchar,
@@ -86,63 +104,63 @@ public class RecipeDatabaseService
     #region Read
     public async Task<List<Ingredient>> GetAllIngredientsAsync()
     {
-        return await _database.Table<Ingredient>().ToListAsync();
+        return await Database.Table<Ingredient>().ToListAsync();
     }
 
     public async Task<List<Recipe>> GetAllRecipesAsync()
     {
-        return await _database.Table<Recipe>().ToListAsync();
+        return await Database.Table<Recipe>().ToListAsync();
     }
 
     public async Task<List<RecipeIngredient>> GetAllRecipeIngredientsAsync()
     {
-        return await _database.Table<RecipeIngredient>().ToListAsync();
+        return await Database.Table<RecipeIngredient>().ToListAsync();
     }
     #endregion
 
     #region Create Update
     public async Task<int> AddOrUpdateRecipeAsync(Recipe recipe)
     {
-        var existingRecipe = await _database.Table<Recipe>().Where(r => r.Name == recipe.Name).FirstOrDefaultAsync();
+        var existingRecipe = await Database.Table<Recipe>().Where(r => r.Name == recipe.Name).FirstOrDefaultAsync();
         if (existingRecipe == null)
         {
-            return await _database.InsertAsync(recipe);
+            return await Database.InsertAsync(recipe);
         }
         else
         {
             recipe.ID = existingRecipe.ID; // Update the existing recipe's ID
-            return await _database.UpdateAsync(recipe);
+            return await Database.UpdateAsync(recipe);
         }
     }
 
     public async Task<int> AddOrUpdateIngredientAsync(Ingredient ingredient)
     {
-        var existingIngredient = await _database.Table<Ingredient>().Where(i => i.Name == ingredient.Name).FirstOrDefaultAsync();
+        var existingIngredient = await Database.Table<Ingredient>().Where(i => i.Name == ingredient.Name).FirstOrDefaultAsync();
         if (existingIngredient == null)
         {
-            return await _database.InsertAsync(ingredient);
+            return await Database.InsertAsync(ingredient);
         }
         else
         {
             ingredient.ID = existingIngredient.ID; // Update the existing using ID
-            return await _database.UpdateAsync(ingredient);
+            return await Database.UpdateAsync(ingredient);
         }
     }
 
     public async Task<int> AddOrUpdateRecipeIngredientAsync(RecipeIngredient recipeIngredient)
     {
-        var existingRelationship = await _database.Table<RecipeIngredient>()
+        var existingRelationship = await Database.Table<RecipeIngredient>()
             .Where(ri => ri.RecipeID == recipeIngredient.RecipeID && ri.IngredientID == recipeIngredient.IngredientID)
             .FirstOrDefaultAsync();
 
         if (existingRelationship == null)
         {
-            return await _database.InsertAsync(recipeIngredient);
+            return await Database.InsertAsync(recipeIngredient);
         }
         else
         {
             recipeIngredient.ID = existingRelationship.ID; // Update the existing relationship's ID
-            return await _database.UpdateAsync(recipeIngredient);
+            return await Database.UpdateAsync(recipeIngredient);
         }
     }
     #endregion
@@ -150,12 +168,12 @@ public class RecipeDatabaseService
     #region Delete
     public async Task<int> DeleteRecipeAsync(string recipeName)
     {
-        var recipeToDelete = await _database.Table<Recipe>().Where(r => r.Name == recipeName).FirstOrDefaultAsync();
+        var recipeToDelete = await Database.Table<Recipe>().Where(r => r.Name == recipeName).FirstOrDefaultAsync();
         if (recipeToDelete != null)
         {
-            await _database.ExecuteAsync($"DELETE FROM {nameof(RecipeIngredient)} WHERE RecipeID = {recipeToDelete.ID}");
+            await Database.ExecuteAsync($"DELETE FROM {nameof(RecipeIngredient)} WHERE RecipeID = {recipeToDelete.ID}");
             // delete from recipe table
-            return await _database.DeleteAsync(recipeToDelete);
+            return await Database.DeleteAsync(recipeToDelete);
         }
         return 0;
     }
@@ -168,22 +186,22 @@ public class RecipeDatabaseService
 
     public async Task<int> AddMealAsync(Meal meal)
     {
-        return await _database.InsertAsync(meal);
+        return await Database.InsertAsync(meal);
     }
 
     public async Task<int> UpdateMealAsync(Meal meal)
     {
-        return await _database.UpdateAsync(meal);
+        return await Database.UpdateAsync(meal);
     }
 
     public async Task<int> DeleteMealAsync(int mealID)
     {
-        return await _database.DeleteAsync<Meal>(mealID);
+        return await Database.DeleteAsync<Meal>(mealID);
     }
 
     public async Task<List<Meal>> GetMealsForDateAsync(DateTime date)
     {
-        return await _database.Table<Meal>().Where(m => m.Date == date).ToListAsync();
+        return await Database.Table<Meal>().Where(m => m.Date == date).ToListAsync();
     }
 
     #endregion
@@ -191,31 +209,117 @@ public class RecipeDatabaseService
 
     #region Grocery List
 
-    public async Task<int> AddGroceryListAsync(GroceryList groceryList)
-        {
-            return await _database.InsertAsync(groceryList);
-        }
 
-        public async Task<List<GroceryList>> GetGroceryListsAsync()
-        {
-            return await _database.Table<GroceryList>().ToListAsync();
-        }
-
-    public async Task<List<(Ingredient, double)>> GenerateGroceryListAsync(DateTime startDate, DateTime endDate)
+    public async Task<int> AddGroceryListItemAsync(Ingredient ingredient, double quantity)
     {
-        var meals = await _database.Table<Meal>()
+        var groceryListItem = new GroceryListItem
+        {
+            IngredientID = ingredient.ID,
+            Quantity = quantity,
+            IsBought = false
+        };
+
+        return await Database.InsertAsync(groceryListItem);
+    }
+
+    public async Task<int> AddGroceryList(List<GroceryListItem> groceryListItems)
+    {
+        if (groceryListItems == null || !groceryListItems.Any())
+        {
+            return 0; // No items to add
+        }
+
+        foreach (var groceryListItem in groceryListItems)
+        {
+            await Database.InsertAsync(groceryListItem);
+        }
+
+        return groceryListItems.Count;
+    }
+
+
+
+
+    public async Task MarkGroceryItemAsBoughtAsync(int groceryListItemID)
+    {
+        var groceryListItem = await Database.Table<GroceryListItem>().Where(item => item.ID == groceryListItemID).FirstOrDefaultAsync();
+
+        if (groceryListItem != null)
+        {
+            groceryListItem.IsBought = true;
+            await Database.UpdateAsync(groceryListItem);
+        }
+    }
+
+    public async Task MarkGroceryItemAsBoughtAsync(string ingredientName, double quantity)
+    {
+        var groceryItem = await Database.Table<GroceryListItem>()
+            .Where(item => item.IsBought == false) // Consider only items that are not bought
+            .FirstOrDefaultAsync();
+
+        if (groceryItem != null)
+        {
+            // Check if the ingredient name and quantity match
+            var ingredient = await Database.Table<Ingredient>()
+                .Where(i => i.Name == ingredientName && i.ID == groceryItem.IngredientID)
+                .FirstOrDefaultAsync();
+
+            if (ingredient != null && groceryItem.Quantity == quantity)
+            {
+                // Mark the item as bought
+                groceryItem.IsBought = true;
+                await Database.UpdateAsync(groceryItem);
+            }
+        }
+    }
+
+
+    public async Task MarkGroceryItemAsNOTBoughtAsync(string ingredientName, double quantity)
+    {
+        var groceryItem = await Database.Table<GroceryListItem>()
+            .Where(item => item.IsBought == true) // Consider only items that are bought
+            .FirstOrDefaultAsync();
+
+        if (groceryItem != null)
+        {
+            // Check if the ingredient name and quantity match
+            var ingredient = await Database.Table<Ingredient>()
+                .Where(i => i.Name == ingredientName && i.ID == groceryItem.IngredientID)
+                .FirstOrDefaultAsync();
+
+            if (ingredient != null && groceryItem.Quantity == quantity)
+            {
+                // Mark the item as not bought
+                groceryItem.IsBought = false;
+                await Database.UpdateAsync(groceryItem);
+            }
+        }
+    }
+
+
+    public async Task ClearGroceryListAsync()
+    {
+        await Database.DropTableAsync<GroceryListItem>();
+        await Database.CreateTableAsync<GroceryListItem>();
+    }
+
+
+
+    public async Task<List<GroceryListItem>> GenerateGroceryListAsync(DateTime startDate, DateTime endDate)
+    {
+        var meals = await Database.Table<Meal>()
             .Where(m => m.Date >= startDate && m.Date <= endDate)
             .ToListAsync();
 
-        var groceryList = new List<(Ingredient, double)>();
+        var groceryList = new List<GroceryListItem>();
 
         foreach (var meal in meals)
         {
-            var recipeIngredients = await _database.Table<RecipeIngredient>()
+            var recipeIngredients = await Database.Table<RecipeIngredient>()
                 .Where(ri => ri.RecipeID == meal.RecipeID)
                 .ToListAsync();
 
-            var recipe = await _database.Table<Recipe>().Where(r => r.ID == meal.RecipeID).FirstOrDefaultAsync();
+            var recipe = await Database.Table<Recipe>().Where(r => r.ID == meal.RecipeID).FirstOrDefaultAsync();
 
             if (recipe != null)
             {
@@ -223,13 +327,25 @@ public class RecipeDatabaseService
 
                 foreach (var recipeIngredient in recipeIngredients)
                 {
-                    var ingredient = await _database.Table<Ingredient>().Where(i => i.ID == recipeIngredient.IngredientID).FirstOrDefaultAsync();
+                    var ingredient = await Database.Table<Ingredient>().Where(i => i.ID == recipeIngredient.IngredientID).FirstOrDefaultAsync();
 
                     if (ingredient != null)
                     {
                         // Adjust the quantity based on portionMultiplier
                         double adjustedQuantity = recipeIngredient.Quantity * portionMultiplier;
-                        groceryList.Add((ingredient, adjustedQuantity));
+
+                        // Add grocery list item to the database
+                        await AddGroceryListItemAsync(ingredient, adjustedQuantity);
+
+                        // Create GroceryListItem object for the result
+                        var groceryListItem = new GroceryListItem
+                        {
+                            IngredientID = ingredient.ID,
+                            Quantity = adjustedQuantity,
+                            IsBought = false
+                        };
+
+                        groceryList.Add(groceryListItem);
                     }
                 }
             }
@@ -237,6 +353,7 @@ public class RecipeDatabaseService
 
         return groceryList;
     }
+
 
 
 
@@ -256,23 +373,43 @@ class Program
     static async Task Main(string[] args)
     {
 
+        Console.WriteLine("DATABASE TEST PLAYGROUND\n\n");
+
+
+        Console.WriteLine("Creating or opening the database...");
         string dbFileName = "RecipesDataBase.db";
         string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbFileName);
 
         // Initialize the database service
-        var dbService = new RecipeDatabaseService(dbPath);
+        RecipeDatabaseService dbService;
 
         try
         {
+            dbService = new RecipeDatabaseService(dbPath);
+        }
+        catch
+        {
+            Console.WriteLine("Failed while trying to initilize DB.");
+            return;
+        }
+
+        Console.WriteLine(" Succeeded. \n");
+
+        try
+        {
+
+            Console.WriteLine("Creating some ingredients...\n");
             // Add three ingredients to the database
-            var ingredient1 = new Ingredient { Name = "Ingredient 1", Unit = Unit.pieces, WhereToFind = "Store 5" };
-            var ingredient2 = new Ingredient { Name = "Ingredient 2", Unit = Unit.pieces, WhereToFind = "Store 2" };
-            var ingredient3 = new Ingredient { Name = "Ingredient 3", Unit = Unit.cups, WhereToFind = "Store 3" };
+            var ingredient1 = new Ingredient { Name = "Cheese", Unit = Unit.grams, WhereToFind = SupermarketSection.Dairy_Products };
+            var ingredient2 = new Ingredient { Name = "Pumpkin", Unit = Unit.pieces, WhereToFind = SupermarketSection.Fruits_and_Vegetables };
+            var ingredient3 = new Ingredient { Name = "Olives Oil", Unit = Unit.cups, WhereToFind = SupermarketSection.Oils_Sauces_and_Spices };
 
             await dbService.AddOrUpdateIngredientAsync(ingredient1);
             await dbService.AddOrUpdateIngredientAsync(ingredient2);
             await dbService.AddOrUpdateIngredientAsync(ingredient3);
 
+
+            Console.WriteLine(" Creating some Recipes. \n");
             // Create two recipes using two ingredients each
             var recipe1 = new Recipe { Name = "Recipe 1", Preparation = "Prepare Recipe 1", Portions = 4 };
             var recipe2 = new Recipe { Name = "Recipe 4", Preparation = "Prepare Recipe 2", Portions = 2 };
@@ -282,7 +419,7 @@ class Program
             await dbService.AddOrUpdateRecipeAsync(recipe1);
             await dbService.AddOrUpdateRecipeAsync(recipe2);
 
-
+            Console.WriteLine(" Associating ingredients with recipes. \n");
             // Associate ingredients with recipes
             var recipeIngredient1 = new RecipeIngredient { RecipeID = recipe1.ID, IngredientID = ingredient1.ID, Quantity = 200 };
             var recipeIngredient2 = new RecipeIngredient { RecipeID = recipe1.ID, IngredientID = ingredient2.ID, Quantity = 3 };
@@ -297,7 +434,7 @@ class Program
             await dbService.AddOrUpdateRecipeIngredientAsync(recipeIngredient4);
 
 
-            Console.WriteLine("Added ingredients and recipes. Press a key to continue");
+            Console.WriteLine("Added ingredients and recipes. Press a key to continue\n");
             Console.ReadKey();
 
             // List all recipes and ingredients
@@ -320,14 +457,14 @@ class Program
             }
 
 
-            Console.WriteLine("press to delete Recipe 1");
+            Console.WriteLine("press to delete Recipe 1\n");
             Console.ReadKey();
 
             // Delete one of the recipes and its relationships
-            //await dbService.DeleteRecipeAsync("Recipe 1");
+            await dbService.DeleteRecipeAsync("Recipe 1");
             //await dbService.DeleteRecipeAsync(recipeToDelete);
 
-            Console.WriteLine("Deleting Recipe 1");
+            Console.WriteLine("Recipe 1 Deleted. Press a key to continue...");
             Console.ReadKey();
 
 
@@ -366,12 +503,20 @@ class Program
             var groceryList = await dbService.GenerateGroceryListAsync(startDate, endDate);
 
             Console.WriteLine("Grocery List for the specified date range:");
-            foreach (var (ingredient, quantity) in groceryList)
+            Console.WriteLine("Grocery List:");
+            foreach (var groceryItem in groceryList)
             {
-                Console.WriteLine($"{ingredient.Name} ({ingredient.Unit}): {quantity} {ingredient.WhereToFind}");
+                var ingredient = await dbService.Database.Table<Ingredient>().Where(i => i.ID == groceryItem.IngredientID).FirstOrDefaultAsync();
+
+                if (ingredient != null)
+                {
+                    Console.WriteLine($"Item: {ingredient.Name} ({ingredient.Unit})");
+                    Console.WriteLine($"Quantity: {groceryItem.Quantity}");
+                    Console.WriteLine($"Where to Find: {ingredient.WhereToFind}");
+                    Console.WriteLine($"Is Bought: {groceryItem.IsBought}");
+                    Console.WriteLine("----------------------");
+                }
             }
-
-
 
         }
         catch (Exception ex)
