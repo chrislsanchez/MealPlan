@@ -384,7 +384,7 @@ class Program
     static async Task Main(string[] args)
     {
 
-        Console.WriteLine("DATABASE TEST PLAYGROUND\n\n");
+        Console.WriteLine("DATABASE TEST PLAYGROUND\n");
 
 
         Console.WriteLine("Creating or opening the database...");
@@ -397,59 +397,54 @@ class Program
         try
         {
             dbService = new RecipeDatabaseService(dbPath);
-        }
-        catch
-        {
-            Console.WriteLine("Failed while trying to initilize DB.");
-            return;
-        }
+            Console.WriteLine(" Succeeded. n");
 
-        Console.WriteLine(" Succeeded. \n");
-
-        try
-        {
-
-            Console.WriteLine("Creating some ingredients...\n");
+            Console.WriteLine("Testing Ingredient Creation...");
+            Ingredient ingredient1, ingredient2, ingredient3;
+       
             // Add three ingredients to the database
-            var ingredient1 = new Ingredient { Name = "Cheese", Unit = Unit.grams, WhereToFind = SupermarketSection.Dairy_Products };
-            var ingredient2 = new Ingredient { Name = "Pumpkin", Unit = Unit.pieces, WhereToFind = SupermarketSection.Fruits_and_Vegetables };
-            var ingredient3 = new Ingredient { Name = "Olives Oil", Unit = Unit.cups, WhereToFind = SupermarketSection.Oils_Sauces_and_Spices };
+            ingredient1 = new Ingredient { Name = "Cheese", Unit = Unit.grams, WhereToFind = SupermarketSection.Dairy_Products };
+            ingredient2 = new Ingredient { Name = "Pumpkin", Unit = Unit.pieces, WhereToFind = SupermarketSection.Fruits_and_Vegetables };
+            ingredient3 = new Ingredient { Name = "Olives Oil", Unit = Unit.cups, WhereToFind = SupermarketSection.Oils_Sauces_and_Spices };
 
             await dbService.AddOrUpdateIngredientAsync(ingredient1);
             await dbService.AddOrUpdateIngredientAsync(ingredient2);
             await dbService.AddOrUpdateIngredientAsync(ingredient3);
 
+            Console.WriteLine(" Succeeded. \n");
 
-            Console.WriteLine(" Creating some Recipes. \n");
+
+            Console.WriteLine("Testing Recipe Creation...");
+            Recipe recipe1, recipe2;
+
             // Create two recipes using two ingredients each
-            var recipe1 = new Recipe { Name = "Recipe 1", Preparation = "Prepare Recipe 1", Portions = 4 };
-            var recipe2 = new Recipe { Name = "Recipe 4", Preparation = "Prepare Recipe 2", Portions = 2 };
+            recipe1 = new Recipe { Name = "Recipe 1", Preparation = "Prepare Recipe 1", Portions = 4 };
+            recipe2 = new Recipe { Name = "Recipe 4", Preparation = "Prepare Recipe 2", Portions = 2 };
 
             // bug here. While associating recipeingredients the recipe1 ID is always 0. The Id needs to be readed from the table searching by name.
 
             await dbService.AddOrUpdateRecipeAsync(recipe1);
             await dbService.AddOrUpdateRecipeAsync(recipe2);
+            Console.WriteLine(" Succeeded. \n");
 
-            Console.WriteLine(" Associating ingredients with recipes. \n");
+
+            Console.WriteLine("Testing Recipe - ingredients association...");
+            RecipeIngredient recipeIngredient1, recipeIngredient2, recipeIngredient3, recipeIngredient4;
+        
             // Associate ingredients with recipes
-            var recipeIngredient1 = new RecipeIngredient { RecipeID = recipe1.ID, IngredientID = ingredient1.ID, Quantity = 200 };
-            var recipeIngredient2 = new RecipeIngredient { RecipeID = recipe1.ID, IngredientID = ingredient2.ID, Quantity = 3 };
-            var recipeIngredient3 = new RecipeIngredient { RecipeID = recipe2.ID, IngredientID = ingredient2.ID, Quantity = 2 };
-            var recipeIngredient4 = new RecipeIngredient { RecipeID = recipe2.ID, IngredientID = ingredient3.ID, Quantity = 1 };
-
-
+            recipeIngredient1 = new RecipeIngredient { RecipeID = recipe1.ID, IngredientID = ingredient1.ID, Quantity = 200 };
+            recipeIngredient2 = new RecipeIngredient { RecipeID = recipe1.ID, IngredientID = ingredient2.ID, Quantity = 3 };
+            recipeIngredient3 = new RecipeIngredient { RecipeID = recipe2.ID, IngredientID = ingredient2.ID, Quantity = 2 };
+            recipeIngredient4 = new RecipeIngredient { RecipeID = recipe2.ID, IngredientID = ingredient3.ID, Quantity = 1 };
 
             await dbService.AddOrUpdateRecipeIngredientAsync(recipeIngredient1);
             await dbService.AddOrUpdateRecipeIngredientAsync(recipeIngredient2);
             await dbService.AddOrUpdateRecipeIngredientAsync(recipeIngredient3);
             await dbService.AddOrUpdateRecipeIngredientAsync(recipeIngredient4);
+            Console.WriteLine(" Succeeded. \n");
 
 
-            Console.WriteLine("Added ingredients and recipes. Press a key to continue\n");
-            Console.ReadKey();
-
-            // List all recipes and ingredients
-            Console.WriteLine("List all recipes and ingredients");
+            Console.WriteLine("---------------------------\n Recipes and Ingredients \n---------------------------\n");
             var recipes = await dbService.GetAllRecipesAsync();
             foreach (var r in recipes)
             {
@@ -466,23 +461,18 @@ class Program
                     }
                 }
             }
+            Console.WriteLine("\n");
 
+            Console.WriteLine("Test Recipe Deletion...\n");
 
-            Console.WriteLine("press to delete Recipe 1\n");
-            Console.ReadKey();
-
+            Console.WriteLine("Deleting Recipe 1 by name...");
             // Delete one of the recipes and its relationships
             await dbService.DeleteRecipeAsync("Recipe 1");
             //await dbService.DeleteRecipeAsync(recipeToDelete);
+            Console.WriteLine(" Succeeded. \n");
 
-            Console.WriteLine("Recipe 1 Deleted. Press a key to continue...");
-            Console.ReadKey();
-
-
-
-            // List remaining recipes and ingredients
+            Console.WriteLine("---------------------------\n Recipes and Ingredients \n---------------------------\n");
             recipes = await dbService.GetAllRecipesAsync();
-            Console.WriteLine("\n\nRecipes and Ingredients after deletion:");
             foreach (var r in recipes)
             {
                 Console.WriteLine($"Recipe: {r.Name}");
@@ -493,48 +483,52 @@ class Program
                     if (ri.RecipeID == r.ID)
                     {
                         var ingredient = ingredients.Find(i => i.ID == ri.IngredientID);
-                        if(ingredient is not null )
+                        if (ingredient is not null)
                             Console.WriteLine($"  - {ingredient.Name}: {ri.Quantity} {ingredient.Unit}");
                     }
                 }
             }
+            Console.WriteLine("\n");
 
+
+            Console.WriteLine("Creating some Meals...");
+            Meal meal1, meal2;
+        
             // create a couple of meals
             // Create two meals for different dates
-            var meal1 = new Meal { Date = DateTime.Now.Date, RecipeID = recipe1.ID, Portions = recipe1.Portions };
-            var meal2 = new Meal { Date = DateTime.Now.AddDays(1).Date, RecipeID = recipe2.ID, Portions = recipe2.Portions };
+            meal1 = new Meal { Date = DateTime.Now.Date, RecipeID = recipe1.ID, Portions = recipe1.Portions };
+            meal2 = new Meal { Date = DateTime.Now.AddDays(1).Date, RecipeID = recipe2.ID, Portions = recipe2.Portions };
 
             await dbService.AddMealAsync(meal1);
             await dbService.AddMealAsync(meal2);
+        
+            Console.WriteLine(" Succeeded. \n");
 
+
+            Console.WriteLine("Creating the Grocery List");
             // Generate a grocery list for a date range
             var startDate = DateTime.Now.Date;
             var endDate = DateTime.Now.AddDays(2).Date;
 
             var groceryList = await dbService.GenerateGroceryListAsync(startDate, endDate);
 
-            Console.WriteLine("Grocery List for the specified date range:");
-            Console.WriteLine("Grocery List:");
             foreach (var groceryItem in groceryList)
             {
                 Ingredient ingredient = await dbService.GetIngredientByID(groceryItem.IngredientID);
-                    
+
                 if (ingredient != null)
                 {
-                    Console.WriteLine($"Item: {ingredient.Name} ({ingredient.Unit})");
-                    Console.WriteLine($"Quantity: {groceryItem.Quantity}");
+                    Console.WriteLine($"Item: {ingredient.Name}");
+                    Console.WriteLine($"Quantity: {groceryItem.Quantity} ({ingredient.Unit})");
                     Console.WriteLine($"Where to Find: {ingredient.WhereToFind}");
                     Console.WriteLine($"Is Bought: {groceryItem.IsBought}");
                     Console.WriteLine("----------------------");
                 }
             }
-
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Failed. An error occurred: {ex.Message}");
         }
     }
-
-
 }
