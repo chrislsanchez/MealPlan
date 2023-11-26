@@ -1,10 +1,10 @@
 ﻿using MealPlanner.View;
+using Serilog;
 
 namespace MealPlanner.ViewModel;
 
 public partial class MainViewModel : BaseViewModel
 {
-
     [ObservableProperty]
     ObservableCollection<string> items;
 
@@ -58,6 +58,7 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     async Task AddNewRecipe()
     {
+        Log.Debug("Adding New Recipe Page initialized");
         await Shell.Current.GoToAsync(nameof(NewRecipePage));
     }
 
