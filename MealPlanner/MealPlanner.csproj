@@ -71,22 +71,40 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="View\AboutPage.xaml.cs">
+	    <DependentUpon>AboutPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\CalenderPage.xaml.cs">
+	    <DependentUpon>CalenderPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\GroceriesPage.xaml.cs">
+	    <DependentUpon>GroceriesPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\GroceryListsPage.xaml.cs">
+	    <DependentUpon>GroceryListsPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\MainPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\NewShoppingListPage.xaml.cs">
+	    <DependentUpon>NewShoppingListPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\RecipesPage.xaml.cs">
+	    <DependentUpon>RecipesPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="View\About.xaml">
+	  <MauiXaml Update="View\AboutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\Calender.xaml">
+	  <MauiXaml Update="View\CalenderPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\Groceries.xaml">
+	  <MauiXaml Update="View\GroceriesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\GroceryLists.xaml">
+	  <MauiXaml Update="View\GroceryListsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\MainPage.xaml">
@@ -95,10 +113,10 @@
 	  <MauiXaml Update="View\NewRecipePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\NewShoppingList.xaml">
+	  <MauiXaml Update="View\NewShoppingListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\Recipes.xaml">
+	  <MauiXaml Update="View\RecipesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

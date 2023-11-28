@@ -1,8 +1,8 @@
 namespace MealPlanner.View;
 
-public partial class Groceries : ContentPage
+public partial class AboutPage : ContentPage
 {
-	public Groceries()
+	public AboutPage()
 	{
 		InitializeComponent();
 	}

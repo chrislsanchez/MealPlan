@@ -22,32 +22,32 @@
 
         <ShellContent
             Title="Create New Grocery List"
-            ContentTemplate="{DataTemplate view:NewShoppingList}"
+            ContentTemplate="{DataTemplate view:NewShoppingListPage}"
             Route="NewShoppingList" />
 
         <ShellContent
             Title="Grocery Lists"
-            ContentTemplate="{DataTemplate view:GroceryLists}"
+            ContentTemplate="{DataTemplate view:GroceryListsPage}"
             Route="GroceryLists" />
 
         <ShellContent
             Title="Recipes"
-            ContentTemplate="{DataTemplate view:Recipes}"
+            ContentTemplate="{DataTemplate view:RecipesPage}"
             Route="Recipes" />
 
         <ShellContent
             Title="Groceries"
-            ContentTemplate="{DataTemplate view:Groceries}"
+            ContentTemplate="{DataTemplate view:GroceriesPage}"
             Route="Groceries" />
 
         <ShellContent
             Title="Calender"
-            ContentTemplate="{DataTemplate view:Calender}"
+            ContentTemplate="{DataTemplate view:CalenderPage}"
             Route="Calender" />
 
         <ShellContent
             Title="About"
-            ContentTemplate="{DataTemplate view:About}"
+            ContentTemplate="{DataTemplate view:AboutPage}"
             Route="About" />
 
     </FlyoutItem>
