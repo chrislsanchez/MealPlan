@@ -6,27 +6,35 @@ namespace MealPlanner.ViewModel;
 public partial class MainViewModel : BaseViewModel
 {
     [ObservableProperty]
-    ObservableCollection<string> items;
+    ObservableCollection<string>? items;
 
     [ObservableProperty]
-    string myTaskText;
+    string? myTaskText;
 
     [RelayCommand]
-    async void Add()
+    Task<Task> Add()
     {
         if (string.IsNullOrEmpty(MyTaskText))
         {
-            return;
+            return Task.FromResult(Task.CompletedTask);
         }
 
-
-        Items.Add(MyTaskText);
+        if (Items is not null)
+        {
+            Items.Add(MyTaskText);
+        }
         MyTaskText = string.Empty;
+        return Task.FromResult(Task.CompletedTask);
     }
 
     [RelayCommand]
     void Delete(string stringToDelete)
     {
+        if (Items is null)
+        {
+            return;
+        }
+
         if (stringToDelete != null && Items.Contains(stringToDelete))
         {
             Items.Remove(stringToDelete);
