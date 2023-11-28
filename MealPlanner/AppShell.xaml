@@ -4,16 +4,53 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MealPlanner"
-    Shell.FlyoutBehavior="Flyout">
+    xmlns:view="clr-namespace:MealPlanner.View"
+    Shell.FlyoutBehavior="Flyout"
+    Shell.TabBarIsVisible="False">
 
 
-    <FlyoutItem Title="Navigate" >
+    <FlyoutItem Title="Home" FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
-                
+
+        <ShellContent
+            Title="Create New Recipe"
+            ContentTemplate="{DataTemplate view:NewRecipePage}"
+            Route="NewRecipePage" />
+
+        <ShellContent
+            Title="Create New Grocery List"
+            ContentTemplate="{DataTemplate view:NewShoppingList}"
+            Route="NewShoppingList" />
+
+        <ShellContent
+            Title="Grocery Lists"
+            ContentTemplate="{DataTemplate view:GroceryLists}"
+            Route="GroceryLists" />
+
+        <ShellContent
+            Title="Recipes"
+            ContentTemplate="{DataTemplate view:Recipes}"
+            Route="Recipes" />
+
+        <ShellContent
+            Title="Groceries"
+            ContentTemplate="{DataTemplate view:Groceries}"
+            Route="Groceries" />
+
+        <ShellContent
+            Title="Calender"
+            ContentTemplate="{DataTemplate view:Calender}"
+            Route="Calender" />
+
+        <ShellContent
+            Title="About"
+            ContentTemplate="{DataTemplate view:About}"
+            Route="About" />
+
     </FlyoutItem>
-                
+
 
 </Shell>
