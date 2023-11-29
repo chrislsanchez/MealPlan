@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MealPlanner.ViewModel;
 
-namespace MealPlanner.ViewModel
+public partial class CalenderViewModel : BaseViewModel
 {
-    internal class CalenderViewModel
-    {
-    }
 }

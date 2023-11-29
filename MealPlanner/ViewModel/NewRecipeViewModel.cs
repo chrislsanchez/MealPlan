@@ -1,5 +1,5 @@
 ﻿namespace MealPlanner.ViewModel;
-public partial class NewRecipeViewModel : ObservableObject
+public partial class NewRecipeViewModel : BaseViewModel
 {
 
     // Create an ObservableCollection of Ingredient objects and initialize it with two ingredients

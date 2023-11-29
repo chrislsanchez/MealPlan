@@ -1,5 +1,5 @@
 ﻿namespace MealPlanner.ViewModel;
 
-internal class AboutViewModel
+public partial class AboutViewModel : BaseViewModel
 {
 }
