@@ -10,8 +10,11 @@ public partial class NewRecipeViewModel : BaseViewModel
             new Ingredient { Name = "Salt", Unit = Unit.grams }
         };
 
-    [ObservableProperty]
-    string text;
+    public NewRecipeViewModel() { 
+    
+        Title = "Create new recipe";
+    }
+
 
     [RelayCommand]
     async Task GoBack()

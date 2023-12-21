@@ -3,11 +3,14 @@
     x:Class="MealPlanner.View.AboutPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="About">
+    xmlns:model="clr-namespace:MealPlanner.Model"
+    xmlns:viewmodel="clr-namespace:MealPlanner.ViewModel"
+    Title="{Binding Title}"
+    x:DataType="viewmodel:AboutViewModel">
     <VerticalStackLayout>
         <Label
             HorizontalOptions="Center"
-            Text="Welcome to .NET MAUI!"
+            Text="{Binding AboutText}"
             VerticalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>
