@@ -1,10 +1,9 @@
 ﻿namespace MealPlanner.Model;
-
-public class RecipeIngredient
+public class GroceryListItem
 {
     [PrimaryKey, AutoIncrement]
     public int ID { get; set; }
-    public int RecipeID { get; set; }
     public int IngredientID { get; set; }
-    public int Quantity { get; set; }
+    public double Quantity { get; set; }
+    public bool IsBought { get; set; }
 }

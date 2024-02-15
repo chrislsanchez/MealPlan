@@ -64,19 +64,6 @@
         </Grid>
 
 
-        <Grid
-            Grid.Row="1"
-            ColumnDefinitions="*,*,*"
-            ColumnSpacing="5">
-            <Button
-                Grid.Column="1"
-                Command="{Binding GoBackCommand}"
-                Text="Go Back" />
-            <Button Grid.Column="2" Text="Save &amp; Go Back" />
-
-        </Grid>
-
-
 
     </Grid>
 </ContentPage>

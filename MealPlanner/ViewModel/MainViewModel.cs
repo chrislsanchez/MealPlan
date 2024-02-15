@@ -5,11 +5,22 @@ namespace MealPlanner.ViewModel;
 
 public partial class MainViewModel : BaseViewModel
 {
+
+    //public MainViewModel(RecipeDatabaseService recipesDatabase)
+    //{
+    //    _recipesDatabase = recipesDatabase;
+    //}
+
+    private RecipeDatabaseService _recipesDatabase;
+
     [ObservableProperty]
     ObservableCollection<string>? items;
 
     [ObservableProperty]
     string? myTaskText;
+
+    [ObservableProperty]    
+    private string? _databasePathText = "Here will the database path be inserted";
 
     [RelayCommand]
     Task<Task> Add()
@@ -40,28 +51,6 @@ public partial class MainViewModel : BaseViewModel
             Items.Remove(stringToDelete);
         }
     }
-
-    /// <summary>
-    /// Asynchronous function for handling a tap event with a parameter.
-    /// When called, it navigates to the 'DetailPage' using Shell navigation and includes a query parameter 'Text' with the provided 'stringToPass' value.
-    /// The 'stringToPass' parameter is used to pass additional information to the 'DetailPage'.
-    /// </summary>
-    /// <param name="stringToPass"></param>
-    /// <returns></returns>
-    [RelayCommand]
-    async Task Tap(string stringToPass)
-    {
-        //await Shell.Current.GoToAsync($"{nameof(DetailPage)}?TextToPass={stringToPass}");
-
-        //Example passing complex data types
-        //await Shell.Current.GoToAsync($"{nameof(DetailPage)}?Text={stringToPass}",
-        //    new Dictionary<string, object>
-        //    {
-        //        {nameof(DetailPage),new object()},
-        //    });
-
-    }
-
 
     [RelayCommand]
     async Task AddNewRecipe()

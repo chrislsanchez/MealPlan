@@ -102,21 +102,38 @@ public class RecipeDatabaseService
 
 
     #region Read
+    /// <summary>
+    /// gets and retursn all the ingredients from the database
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<Ingredient>> GetAllIngredientsAsync()
     {
         return await _database.Table<Ingredient>().ToListAsync();
     }
 
+    /// <summary>
+    /// returns a list of all recepies
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<Recipe>> GetAllRecipesAsync()
     {
         return await _database.Table<Recipe>().ToListAsync();
     }
 
+    /// <summary>
+    /// returns a list of all recipe ingrediennt relationships
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<RecipeIngredient>> GetAllRecipeIngredientsAsync()
     {
         return await _database.Table<RecipeIngredient>().ToListAsync();
     }
 
+    /// <summary>
+    /// Get an ingredient by id
+    /// </summary>
+    /// <param name="ingredientID"></param>
+    /// <returns></returns>
     public async Task<Ingredient> GetIngredientByID(int ingredientID)
     {
         Ingredient ingredient = await _database.Table<Ingredient>().Where(i => i.ID == ingredientID).FirstOrDefaultAsync();
@@ -188,9 +205,6 @@ public class RecipeDatabaseService
     }
     #endregion
 
-
-
-
     #region Meals
 
     public async Task<int> AddMealAsync(Meal meal)
@@ -246,9 +260,6 @@ public class RecipeDatabaseService
         return groceryListItems.Count;
     }
 
-
-
-
     public async Task MarkGroceryItemAsBoughtAsync(int groceryListItemID)
     {
         var groceryListItem = await _database.Table<GroceryListItem>().Where(item => item.ID == groceryListItemID).FirstOrDefaultAsync();
@@ -281,8 +292,6 @@ public class RecipeDatabaseService
             }
         }
     }
-
-
     public async Task MarkGroceryItemAsNOTBoughtAsync(string ingredientName, double quantity)
     {
         var groceryItem = await _database.Table<GroceryListItem>()
@@ -305,14 +314,11 @@ public class RecipeDatabaseService
         }
     }
 
-
     public async Task ClearGroceryListAsync()
     {
         await _database.DropTableAsync<GroceryListItem>();
         await _database.CreateTableAsync<GroceryListItem>();
     }
-
-
 
     public async Task<List<GroceryListItem>> GenerateGroceryListAsync(DateTime startDate, DateTime endDate)
     {
@@ -363,17 +369,7 @@ public class RecipeDatabaseService
         return groceryList;
     }
 
-
-
-
-
-
-
-
     #endregion
-
-
-
 
 }
 
@@ -386,10 +382,10 @@ class Program
 
         Console.WriteLine("DATABASE TEST PLAYGROUND\n");
 
-
-        Console.WriteLine("Creating or opening the database...");
         string dbFileName = "RecipesDataBase.db";
         string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbFileName);
+        Console.WriteLine("Creating or opening the database...");
+        Console.WriteLine("Database Path: " + dbPath);
 
         // Initialize the database service
         RecipeDatabaseService dbService;

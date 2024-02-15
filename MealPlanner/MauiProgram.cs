@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using MealPlanner.View;
 using MealPlanner.ViewModel;
+using System.Diagnostics;
+using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MealPlanner
 {
@@ -11,13 +14,14 @@ namespace MealPlanner
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .ConfigureServices()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            Logging.Configure(); //adding serilog logger
+            
 
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainViewModel>();

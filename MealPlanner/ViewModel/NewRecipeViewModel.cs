@@ -1,4 +1,7 @@
-﻿namespace MealPlanner.ViewModel;
+﻿using Serilog;
+using System.Diagnostics;
+
+namespace MealPlanner.ViewModel;
 public partial class NewRecipeViewModel : BaseViewModel
 {
 
@@ -10,15 +13,21 @@ public partial class NewRecipeViewModel : BaseViewModel
             new Ingredient { Name = "Salt", Unit = Unit.grams }
         };
 
-    public NewRecipeViewModel() { 
-    
+    public NewRecipeViewModel() {     
+
         Title = "Create new recipe";
+        //_dbService = dbService;
+
+        //if (_dbService == null)
+        //{
+        //    Debug.WriteLine("The dependency injection did not work");
+        //}
+        //else
+        //{
+        //    Debug.WriteLine("The dependency injection Works");
+        //}
+
     }
 
 
-    [RelayCommand]
-    async Task GoBack()
-    {
-        await Shell.Current.GoToAsync("..");
-    }
 }

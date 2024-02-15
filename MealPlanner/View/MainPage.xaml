@@ -27,6 +27,10 @@
             <!--  Command="{Binding NewGroceryListCommand}"  -->
         </Button>
 
+        <Label Grid.Row="3"
+               Text="{Binding DatabasePathText}"
+               VerticalTextAlignment="Center"/>
+
         <!--  Create a Tap Gesture recognizer  -->
 
 
