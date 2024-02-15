@@ -5,6 +5,17 @@ namespace MealPlanner.ViewModel;
 public partial class NewRecipeViewModel : BaseViewModel
 {
 
+    public NewRecipeViewModel(RecipeDatabaseService databaseService)
+    {
+        _databaseService = databaseService;
+
+        Debug.WriteLine("APP DEBUG: In New Recepie View Model Constructor. Database Path = " + _databaseService.DatabasePath);
+
+    }
+
+    private RecipeDatabaseService? _databaseService;
+
+
     // Create an ObservableCollection of Ingredient objects and initialize it with two ingredients
     public ObservableCollection<Ingredient> Ingredients { get; set; } = new ObservableCollection<Ingredient>
         {
