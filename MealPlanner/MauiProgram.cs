@@ -11,6 +11,8 @@ namespace MealPlanner
     {
         public static MauiApp CreateMauiApp()
         {
+            Debug.Write("\nAPP DIRECTORY : " + FileSystem.Current.AppDataDirectory + "\n");
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -19,9 +21,7 @@ namespace MealPlanner
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-
-            
+                });            
 
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainViewModel>();

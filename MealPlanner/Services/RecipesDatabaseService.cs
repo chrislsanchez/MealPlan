@@ -4,35 +4,25 @@ namespace MealPlanner.Services;
 
 public class RecipeDatabaseService
 {
-    private SQLiteAsyncConnection? _database;
+    private SQLiteAsyncConnection _database;
     public string DatabasePath { get => _databasePath; }
     public string DatabaseName = "MealPlanner.db";
     private string _databasePath = Path.Combine(FileSystem.Current.AppDataDirectory, "MealPlanner.db");
 
     public RecipeDatabaseService()
-    {       
-        InitializeDatabase();
-    }
-
-    public RecipeDatabaseService(string dbPath) : this()
     {
-        _databasePath = dbPath;        
-    }
-
-    public RecipeDatabaseService(string dbPath, string dbName) : this()
-    {
-        _databasePath = dbPath;
-        DatabaseName = dbName;
-    }
-
-    private void InitializeDatabase()
-    {
+        _databasePath = Path.Combine(FileSystem.Current.AppDataDirectory, DatabaseName);
         _database = new SQLiteAsyncConnection(_databasePath);
         _database.CreateTableAsync<Ingredient>().Wait();
         InitializeRecipesTable(); // Call a method to set up the Recipe table
         _database.CreateTableAsync<RecipeIngredient>().Wait();
         _database.CreateTableAsync<Meal>().Wait();
         _database.CreateTableAsync<GroceryListItem>().Wait();
+    }
+
+    public RecipeDatabaseService(string dbName) : this()
+    {
+        DatabaseName = dbName;
     }
 
     /// <summary>

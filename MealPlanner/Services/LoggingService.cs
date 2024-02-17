@@ -11,7 +11,7 @@ public static class Logging
         string logDir = Path.Combine(FileSystem.Current.AppDataDirectory, "mealPlanLog.txt");
 
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Verbose()
             .WriteTo.File(logDir, rollingInterval: RollingInterval.Day)
             .CreateLogger();
     }

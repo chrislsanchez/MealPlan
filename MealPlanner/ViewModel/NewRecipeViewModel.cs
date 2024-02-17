@@ -1,44 +1,64 @@
 ﻿using Serilog;
-using System.Diagnostics;
 
 namespace MealPlanner.ViewModel;
+
+public partial class DisplayedIngredient() : ObservableObject
+{
+    [ObservableProperty]
+    string? name;
+    [ObservableProperty]
+    Unit unit;
+    [ObservableProperty]
+    float quantity;
+
+    public DisplayedIngredient(string name, Unit unit, float quantity) : this()
+    {
+        Name = name;
+        Unit = unit;
+        Quantity = quantity;
+    }
+
+}
+
 public partial class NewRecipeViewModel : BaseViewModel
 {
 
+
+
+
     public NewRecipeViewModel(RecipeDatabaseService databaseService)
     {
+        Title = "Create new recipe";
+
+        Log.Debug("New Recipe view model called");
         _databaseService = databaseService;
 
-        Debug.WriteLine("APP DEBUG: In New Recepie View Model Constructor. Database Path = " + _databaseService.DatabasePath);
+        if (databaseService == null)
+        {
+            Log.Error("The database Service is null on NewRecipeViewModel");
+        }
+
+        DisplayedIngredients.Add(new("Cinamon", Unit.grams, 150));
 
     }
 
-    private RecipeDatabaseService? _databaseService;
-
+    private RecipeDatabaseService _databaseService;
 
     // Create an ObservableCollection of Ingredient objects and initialize it with two ingredients
-    public ObservableCollection<Ingredient> Ingredients { get; set; } = new ObservableCollection<Ingredient>
+    public ObservableCollection<DisplayedIngredient> DisplayedIngredients { get; set; } = new ObservableCollection<DisplayedIngredient>
         {
-            new Ingredient { Name = "Flour", Unit = Unit.cups },
-            new Ingredient { Name = "Sugar", Unit = Unit.grams },
-            new Ingredient { Name = "Salt", Unit = Unit.grams }
+            new ("Flour,", Unit.grams, 100),
+            new("Sugar", Unit.grams,200),
+            new("Salt", Unit.grams,300)
         };
 
-    public NewRecipeViewModel() {     
+    [ObservableProperty]
+    List<string> ingredientList = new List<string>{ "1", "2" };
 
-        Title = "Create new recipe";
-        //_dbService = dbService;
-
-        //if (_dbService == null)
-        //{
-        //    Debug.WriteLine("The dependency injection did not work");
-        //}
-        //else
-        //{
-        //    Debug.WriteLine("The dependency injection Works");
-        //}
-
+    [RelayCommand]
+    void AddNewIngredient()
+    {
+        DisplayedIngredients.Add(new("Cinamon", Unit.grams, 150));
     }
-
 
 }

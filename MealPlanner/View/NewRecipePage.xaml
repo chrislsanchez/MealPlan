@@ -15,7 +15,7 @@
         RowSpacing="0">
 
         <Grid Grid.Row="0">
-            <Grid RowDefinitions="Auto,*,Auto">
+            <Grid RowDefinitions="Auto,*,Auto,Auto">
                 <Grid Grid.Row="0" ColumnDefinitions="2*,*">
                     <Entry Grid.Column="0" Placeholder="Recipe name" />
                     <Entry
@@ -23,36 +23,76 @@
                         Keyboard="Numeric"
                         Placeholder="Portions" />
                 </Grid>
-
-
                 <Grid Grid.Row="1" Margin="20">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Ingredients" />
+                        <!--<Label Text="Ingredients" />
                         <Grid ColumnDefinitions="2*,*,*">
-                            <Entry Grid.Column="0" Placeholder="Ingredient" />
+
+                            <Picker Grid.Column="0"
+                                    Title="Select ingredient"
+                                    ItemsSource = "{Binding IngredientList}"/>
+                            <Label Grid.Column="1" Text="Unit}" />
                             <Entry
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Keyboard="Numeric"
                                 Placeholder="Quantity" />
-                            <Entry Grid.Column="2" Placeholder="Unit" />
+
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
                             <Button Grid.Column="1" Text="Add Ingredient" />
                         </Grid>
-                        <Label Text="List of Ingredients" />
 
-                        <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
+                        <Label Text="List of Ingredients" />-->
 
+
+                        <CollectionView ItemsSource="{Binding DisplayedIngredients}"
+                                        SelectionMode="None">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="model:Ingredient">
+                                <DataTemplate x:DataType="viewmodel:DisplayedIngredient">
+
                                     <HorizontalStackLayout Padding="10" Spacing="50">
+                                        <!--Picker
+                                            Title="Select ingredient"
+                                            Grid.Column="0"
+                                            ItemsSource="{Binding DisplayedIngredients}" />-->
+
+                                        <!--<Label Grid.Column="1" Text="{Binding IngredientUnit}" />-->
+
                                         <Label Text="{Binding Name}" />
                                         <Label Text="{Binding Unit}" />
+                                        <Label Text="{Binding Quantity}" />
+
+
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
 
                         </CollectionView>
+
+
+
+                        <!--<CollectionView ItemsSource="{Binding DisplayedIngredients}" SelectionMode="None">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="ViewModel:DisplayedIngredient">
+                                    <HorizontalStackLayout Padding="10" Spacing="50">
+                                        <Picker Grid.Column="0"
+                                    Title="Select ingredient"
+                                    ItemsSource = "{Binding DisplayedIngredients}"/>
+                        -->
+                        <!--<Label Grid.Column="1" Text="{Binding IngredientUnit}" />
+
+                                        <Label Text="{Binding Name}" />
+                                        <Label Text="{Binding Unit}" />-->
+                        <!--
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>-->
+
+
+
                     </VerticalStackLayout>
                 </Grid>
 
@@ -60,6 +100,11 @@
                     Grid.Row="2"
                     HeightRequest="250"
                     Placeholder="Preparation" />
+
+                <Button Grid.Row="3"
+                        Text="Add New Ingredient"
+                        Margin="8"
+                        Command="{Binding AddNewIngredientCommand}" />
             </Grid>
         </Grid>
 
