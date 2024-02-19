@@ -45,29 +45,28 @@
                         <Label Text="List of Ingredients" />-->
 
 
-                        <CollectionView ItemsSource="{Binding DisplayedIngredients}"
-                                        SelectionMode="None">
+                        <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="viewmodel:DisplayedIngredient">
+                                <DataTemplate x:DataType="model:IngredientInfo">
 
                                     <HorizontalStackLayout Padding="10" Spacing="50">
-                                        <!--Picker
+                                        <!--
+                                            Picker
                                             Title="Select ingredient"
                                             Grid.Column="0"
-                                            ItemsSource="{Binding DisplayedIngredients}" />-->
+                                            ItemsSource="{Binding DisplayedIngredients}" />
+                                        -->
 
                                         <!--<Label Grid.Column="1" Text="{Binding IngredientUnit}" />-->
 
                                         <Label Text="{Binding Name}" />
                                         <Label Text="{Binding Unit}" />
                                         <Label Text="{Binding Quantity}" />
-
-
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
-
                         </CollectionView>
+
 
 
 
@@ -96,15 +95,33 @@
                     </VerticalStackLayout>
                 </Grid>
 
+
+
                 <Editor
                     Grid.Row="2"
                     HeightRequest="250"
                     Placeholder="Preparation" />
 
-                <Button Grid.Row="3"
-                        Text="Add New Ingredient"
+                <HorizontalStackLayout Grid.Row="3" Spacing="10">
+
+                    <Picker
+                        Title="Select ingredient"
+                        Grid.Column="0"
+                        ItemsSource="{Binding IngredientList}"
+                        SelectedItem="{Binding AddIngredientName}" />
+
+                    <Label Text="{Binding AddIngredientUnit}" />
+                    <Entry
+                        Keyboard="Numeric"
+                        Placeholder="Quantity"
+                        Text="{Binding AddIngredientQuantity}" />
+
+                    <Button
                         Margin="8"
-                        Command="{Binding AddNewIngredientCommand}" />
+                        Command="{Binding AddNewIngredientCommand}"
+                        Text="Add New Ingredient" />
+                </HorizontalStackLayout>
+
             </Grid>
         </Grid>
 

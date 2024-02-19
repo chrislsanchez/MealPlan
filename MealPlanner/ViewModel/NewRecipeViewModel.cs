@@ -2,30 +2,8 @@
 
 namespace MealPlanner.ViewModel;
 
-public partial class DisplayedIngredient() : ObservableObject
-{
-    [ObservableProperty]
-    string? name;
-    [ObservableProperty]
-    Unit unit;
-    [ObservableProperty]
-    float quantity;
-
-    public DisplayedIngredient(string name, Unit unit, float quantity) : this()
-    {
-        Name = name;
-        Unit = unit;
-        Quantity = quantity;
-    }
-
-}
-
 public partial class NewRecipeViewModel : BaseViewModel
 {
-
-
-
-
     public NewRecipeViewModel(RecipeDatabaseService databaseService)
     {
         Title = "Create new recipe";
@@ -38,14 +16,16 @@ public partial class NewRecipeViewModel : BaseViewModel
             Log.Error("The database Service is null on NewRecipeViewModel");
         }
 
-        DisplayedIngredients.Add(new("Cinamon", Unit.grams, 150));
+        Ingredients.Add(new("Cinamon", Unit.grams, 150));        
 
     }
 
+    #region Properties
+    
     private RecipeDatabaseService _databaseService;
-
+        
     // Create an ObservableCollection of Ingredient objects and initialize it with two ingredients
-    public ObservableCollection<DisplayedIngredient> DisplayedIngredients { get; set; } = new ObservableCollection<DisplayedIngredient>
+    public ObservableCollection<IngredientInfo> Ingredients { get; set; } = new ObservableCollection<IngredientInfo>
         {
             new ("Flour,", Unit.grams, 100),
             new("Sugar", Unit.grams,200),
@@ -53,12 +33,24 @@ public partial class NewRecipeViewModel : BaseViewModel
         };
 
     [ObservableProperty]
-    List<string> ingredientList = new List<string>{ "1", "2" };
+    List<string> ingredientList = new List<string>{ "1", "2", "3", "4" };
+    [ObservableProperty]
+    string addIngredientName;
+    [ObservableProperty]
+    uint addIngredientUnit;
+    [ObservableProperty]
+    float addIngredientQuantity;
+
+    #endregion
+
+    #region Commands
 
     [RelayCommand]
     void AddNewIngredient()
     {
-        DisplayedIngredients.Add(new("Cinamon", Unit.grams, 150));
+        Ingredients.Add(new("Cinamon", Unit.grams, 150));
     }
+
+    #endregion
 
 }
