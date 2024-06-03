@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace MealPlanner.Services;
 
-public static class ServicesExtensions
+public static class ServiceExtensions
 {
     public static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
     {
